@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Station, 'Instance Methods', type: :service do
+describe Station, 'Instance Methods', type: :model do
   context '#all' do
     it 'returns all stations' do
       expect(subject.all).to eq all_stations
