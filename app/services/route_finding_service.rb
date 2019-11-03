@@ -16,6 +16,7 @@ class RouteFindingService
 
     from = station.label_by_name(source)
     to   = station.label_by_name(destination)
+
     @results = @station_graph.find_shortest_path_without_time_cost(from, to)
   end
 
@@ -33,8 +34,11 @@ class RouteFindingService
 
   private
   def calculate_duration
-    @results.each do |name|
-      @duration += weight[:interchange] if station.interchanges.include?(name)
+    @results.each_with_index do |name, index|
+      # if it is interchange and the next and the previous station is different, add waiting for the interchange to duration
+      if station.interchanges.include?(name) && abbreviation(@results[index - 1]) != abbreviation(@results[index + 1])
+        @duration += weight[:interchange]
+      end
 
       if station.ns.include?(name)
         @duration += weight[:ns]
@@ -88,5 +92,9 @@ class RouteFindingService
     end
 
     @errors.empty?
+  end
+
+  def abbreviation(station)
+    station.to_s[0..1]
   end
 end

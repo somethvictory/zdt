@@ -1,14 +1,14 @@
 class Station
   def all
     @all ||= [
-      { code: 'NS1', name: 'Jurong East', label: 'NS1-EW24;Jurong East' },
-      { code: 'NS2', name: 'Bukit Batok', label: 'NS2;Bukit Batok' },
+      { code: 'NS1', name: 'Jurong East', label: 'NS1-EW24:Jurong East' },
+      { code: 'NS2', name: 'Bukit Batok', label: 'NS2:Bukit Batok' },
       { code: 'NS3', name: 'Bukit Gombak', label: 'NS3:Bukit Gombak' },
       { code: 'NS4', name: 'Choa Chu Kang', label: 'NS4:Choa Chu Kang' },
       { code: 'NS5', name: 'Yew Tee', label: 'NS5:Yew Tee' },
       { code: 'NS7', name: 'Kranji', label: 'NS7:Kranji' },
       { code: 'NS8', name: 'Marsiling', label: 'NS8:Marsiling' },
-      { code: 'NS9', name: 'Woodlands', label: 'NS9-TE2;Woodlands' },
+      { code: 'NS9', name: 'Woodlands', label: 'NS9-TE2:Woodlands' },
       { code: 'NS10', name: 'Admiralty', label: 'NS10:Admiralty' },
       { code: 'NS11', name: 'Sembawang', label: 'NS11:Sembawang' },
       { code: 'NS12', name: 'Canberra', label: 'NS12:Canberra' },
@@ -51,7 +51,7 @@ class Station
       { code: 'EW21', name: 'Buona Vista', label: 'EW21-CC22:Buona Vista' },
       { code: 'EW22', name: 'Dover', label: 'EW22:Dover' },
       { code: 'EW23', name: 'Clementi', label: 'EW23:Clementi' },
-      { code: 'EW24', name: 'Jurong East', label: 'NS1-EW24;Jurong East' },
+      { code: 'EW24', name: 'Jurong East', label: 'NS1-EW24:Jurong East' },
       { code: 'EW25', name: 'Chinese Garden', label: 'EW25:Chinese Garden' },
       { code: 'EW26', name: 'Lakeside', label: 'EW26:Lakeside' },
       { code: 'EW27', name: 'Boon Lay', label: 'EW27:Boon Lay' },
@@ -143,7 +143,7 @@ class Station
       { code: 'DT34', name: 'Upper Changi', label: 'DT34:Upper Changi' },
       { code: 'DT35', name: 'Expo', label: 'CG1-DT35:Expo' },
       { code: 'TE1', name: 'Woodlands North', label: 'TE1:Woodlands North' },
-      { code: 'TE2', name: 'Woodlands', label: 'NS9-TE2;Woodlands' },
+      { code: 'TE2', name: 'Woodlands', label: 'NS9-TE2:Woodlands' },
       { code: 'TE3', name: 'Woodlands South', label: 'TE3:Woodlands South' },
       { code: 'TE4', name: 'Springleaf', label: 'TE4:Springleaf' },
       { code: 'TE5', name: 'Lentor', label: 'TE5:Lentor' },
@@ -223,9 +223,25 @@ class Station
     nil
   end
 
+  def name_by_label(label)
+    station = all.find {|e| e[:label] == label }
+    return station[:name] if station
+    nil
+  end
+
   def label_by_name(name)
     station = all.find {|e| e[:name] == name }
     return station[:label] if station
+    nil
+  end
+
+  def code_by_label_and_similar_code(label, code)
+    station = all.find {|e| e[:label] == label }
+    if station
+      codes = station[:label].split(':').first.split('-')
+      return codes.find { |e| e.start_with?(code) }
+    end
+
     nil
   end
 end
